@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "727058230262",
+    "project_id": "smart-cart-fd404",
+    "storage_bucket": "smart-cart-fd404.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:727058230262:android:f7df542c351ba9e20175d7",
+        "android_client_info": {
+          "package_name": "com.example.smart_cart"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "727058230262-v829nl69gtmpc5itnviodubkf6i0ceb3.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA4nldYkc9h9TabacmST7Wkq_FgP5MRLQ8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "727058230262-v829nl69gtmpc5itnviodubkf6i0ceb3.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
