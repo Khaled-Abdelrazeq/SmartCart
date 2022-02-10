@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
 import 'package:url_launcher/url_launcher.dart';
 import './items_page.dart';
+import 'package:intl/intl.dart';
 
 class Scanner extends StatefulWidget {
   @override
@@ -16,6 +17,8 @@ class Scanner extends StatefulWidget {
 class _ScannerState extends State<Scanner> {
   final GlobalKey qrKey = GlobalKey(debugLabel: 'QR');
   QRViewController controller;
+
+  List<String> qrCodes = ['1', '2', '3'];
 
   @override
   void dispose() {
@@ -87,41 +90,70 @@ class _ScannerState extends State<Scanner> {
         await launch(scanData.code);
         controller.resumeCamera();
       } else {
-        FirebaseFirestore.instance
-            .collection('Users')
-            .doc(FirebaseAuth.instance.currentUser?.uid)
-            .set({
-          'Name': FirebaseAuth.instance.currentUser?.displayName,
-          'Cart Code': scanData.code
-        });
-        showDialog(
-          context: context,
-          builder: (BuildContext context) {
-            return AlertDialog(
-              title: Text('you connected to cart number 1'),
-              content: SingleChildScrollView(
-                child: ListBody(
-                  children: <Widget>[
-                    Text('Barcode Type: ${describeEnum(scanData.format)}'),
-                    Text('Data: ${scanData.code}'),
+        if (qrCodes.contains(scanData.code)) {
+          FirebaseFirestore.instance
+              .collection('Users')
+              .doc(FirebaseAuth.instance.currentUser?.uid)
+              .collection('Orders')
+              .doc(DateFormat('yyyy-MM-dd kk-mm').format(DateTime.now()))
+              .set({
+            'Name': FirebaseAuth.instance.currentUser?.displayName,
+            'Cart Code': scanData.code
+          }).then((value) {
+            print('Added to Firebase!');
+            showDialog(
+              context: context,
+              builder: (BuildContext context) {
+                return AlertDialog(
+                  title: Text('you connected to cart number ${scanData.code}'),
+                  content: SingleChildScrollView(
+                    child: ListBody(
+                      children: <Widget>[
+                        Text('Barcode Type: ${describeEnum(scanData.format)}'),
+                        Text('Data: ${scanData.code}'),
+                      ],
+                    ),
+                  ),
+                  actions: <Widget>[
+                    TextButton(
+                      child: Text('Ok'),
+                      onPressed: () {
+                        Navigator.pop(context);
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                // ignore: missing_required_param
+                                builder: (context) => ItemsPage()));
+                      },
+                    ),
                   ],
+                );
+              },
+            ).then((value) => controller.resumeCamera());
+          });
+        } else {
+          showDialog(
+            context: context,
+            builder: (BuildContext context) {
+              return AlertDialog(
+                title: Text('This cart isn\'t available'),
+                content: SingleChildScrollView(
+                  child: ListBody(
+                    children: <Widget>[],
+                  ),
                 ),
-              ),
-              actions: <Widget>[
-                TextButton(
-                  child: Text('Ok'),
-                  onPressed: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            // ignore: missing_required_param
-                            builder: (context) => ItemsPage()));
-                  },
-                ),
-              ],
-            );
-          },
-        ).then((value) => controller.resumeCamera());
+                actions: <Widget>[
+                  TextButton(
+                    child: Text('Ok'),
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                  ),
+                ],
+              );
+            },
+          ).then((value) => controller.resumeCamera());
+        }
       }
     });
   }
