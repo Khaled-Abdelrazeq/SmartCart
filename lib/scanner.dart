@@ -1,7 +1,9 @@
 // ignore_for_file: use_key_in_widget_constructors, prefer_const_constructors
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
@@ -91,6 +93,7 @@ class _ScannerState extends State<Scanner> {
         controller.resumeCamera();
       } else {
         if (qrCodes.contains(scanData.code)) {
+          FirebaseDatabase.instance.ref('Cards').set({'Cart Code': scanData.code});
           FirebaseFirestore.instance
               .collection('Users')
               .doc(FirebaseAuth.instance.currentUser?.uid)
