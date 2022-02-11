@@ -93,7 +93,9 @@ class _ScannerState extends State<Scanner> {
         controller.resumeCamera();
       } else {
         if (qrCodes.contains(scanData.code)) {
-          FirebaseDatabase.instance.ref('Cards').set({'Cart Code': scanData.code}).then((value) {
+          FirebaseDatabase.instance
+              .ref('Cards')
+              .set({'Cart Code': scanData.code}).then((value) {
             print('Added to Firebase!');
             showDialog(
               context: context,
