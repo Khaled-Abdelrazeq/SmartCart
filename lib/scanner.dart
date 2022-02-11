@@ -93,16 +93,7 @@ class _ScannerState extends State<Scanner> {
         controller.resumeCamera();
       } else {
         if (qrCodes.contains(scanData.code)) {
-          FirebaseDatabase.instance.ref('Cards').set({'Cart Code': scanData.code});
-          FirebaseFirestore.instance
-              .collection('Users')
-              .doc(FirebaseAuth.instance.currentUser?.uid)
-              .collection('Orders')
-              .doc(DateFormat('yyyy-MM-dd kk-mm').format(DateTime.now()))
-              .set({
-            'Name': FirebaseAuth.instance.currentUser?.displayName,
-            'Cart Code': scanData.code
-          }).then((value) {
+          FirebaseDatabase.instance.ref('Cards').set({'Cart Code': scanData.code}).then((value) {
             print('Added to Firebase!');
             showDialog(
               context: context,
